@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "package": "com.chirag.bindyourkeys.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "KeybindsScreenMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
