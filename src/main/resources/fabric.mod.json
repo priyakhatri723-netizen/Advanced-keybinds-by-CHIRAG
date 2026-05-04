@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "id": "bindyourkeys",
+  "version": "1.0.0",
+  "name": "BIND-YOUR-KEYS",
+  "description": "Advanced keybind system for Minecraft",
+  "authors": ["CHIRAG"],
+  "contact": {},
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "com.chirag.bindyourkeys.BindYourKeysMod"
+    ]
+  },
+  "mixins": [
+    "bindyourkeys.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.16.5",
+    "fabric-api": "*",
+    "minecraft": "~1.21.1"
+  }
+}
