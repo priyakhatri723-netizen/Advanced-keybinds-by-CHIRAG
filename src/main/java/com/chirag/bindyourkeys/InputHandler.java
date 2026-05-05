@@ -2,6 +2,7 @@ package com.chirag.bindyourkeys;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.util.InputUtil;
 import java.util.*;
 
 public class InputHandler {
@@ -30,8 +31,8 @@ public class InputHandler {
             for (String key : solos) {
                 if (heldKeys.contains(key) && heldKeys.size() == 1) {
                     KeyBinding.onKeyPressed(
-                            net.minecraft.client.util.InputUtil
-                                    .fromTranslationKey(binding.boundKeyTranslationKey));
+                            InputUtil.fromTranslationKey(
+                                    binding.getDefaultKey().getTranslationKey()));
                 }
             }
 
@@ -39,11 +40,11 @@ public class InputHandler {
             List<List<String>> combos = KeybindManager.comboBindings
                     .getOrDefault(actionId, Collections.emptyList());
             for (List<String> combo : combos) {
-                if (heldKeys.containsAll(combo) 
+                if (heldKeys.containsAll(combo)
                         && heldKeys.size() == combo.size()) {
                     KeyBinding.onKeyPressed(
-                            net.minecraft.client.util.InputUtil
-                                    .fromTranslationKey(binding.boundKeyTranslationKey));
+                            InputUtil.fromTranslationKey(
+                                    binding.getDefaultKey().getTranslationKey()));
                 }
             }
         }
