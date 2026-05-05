@@ -1,8 +1,8 @@
 package com.chirag.bindyourkeys;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.KeyMapping;
+import com.mojang.blaze3d.platform.InputConstants;
 import java.util.*;
 
 public class InputHandler {
@@ -19,32 +19,30 @@ public class InputHandler {
     }
 
     private static void checkBindings() {
-        MinecraftClient client = MinecraftClient.getInstance();
+        Minecraft client = Minecraft.getInstance();
         if (client == null) return;
 
-        for (KeyBinding binding : client.options.allKeys) {
-            String actionId = binding.getTranslationKey();
+        for (KeyMapping binding : client.options.keyMappings) {
+            String actionId = binding.getName();
 
-            // Check solo bindings
             List<String> solos = KeybindManager.soloBindings
                     .getOrDefault(actionId, Collections.emptyList());
             for (String key : solos) {
                 if (heldKeys.contains(key) && heldKeys.size() == 1) {
-                    KeyBinding.onKeyPressed(
-                            InputUtil.fromTranslationKey(
-                                    binding.getDefaultKey().getTranslationKey()));
+                    KeyMapping.click(
+                            InputConstants.getKey(
+                                    binding.getDefaultKey().getName(), -1));
                 }
             }
 
-            // Check combo bindings
             List<List<String>> combos = KeybindManager.comboBindings
                     .getOrDefault(actionId, Collections.emptyList());
             for (List<String> combo : combos) {
                 if (heldKeys.containsAll(combo)
                         && heldKeys.size() == combo.size()) {
-                    KeyBinding.onKeyPressed(
-                            InputUtil.fromTranslationKey(
-                                    binding.getDefaultKey().getTranslationKey()));
+                    KeyMapping.click(
+                            InputConstants.getKey(
+                                    binding.getDefaultKey().getName(), -1));
                 }
             }
         }
