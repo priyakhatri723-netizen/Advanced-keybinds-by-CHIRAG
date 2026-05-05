@@ -30,8 +30,8 @@ public class InputHandler {
             for (String key : solos) {
                 if (heldKeys.contains(key) && heldKeys.size() == 1) {
                     KeyMapping.click(
-                            InputConstants.getKey(
-                                    binding.getDefaultKey().getName(), -1));
+                        InputConstants.getKey(
+                            binding.getDefaultKey().getName()));
                 }
             }
 
@@ -41,8 +41,8 @@ public class InputHandler {
                 if (heldKeys.containsAll(combo)
                         && heldKeys.size() == combo.size()) {
                     KeyMapping.click(
-                            InputConstants.getKey(
-                                    binding.getDefaultKey().getName(), -1));
+                        InputConstants.getKey(
+                            binding.getDefaultKey().getName()));
                 }
             }
         }
