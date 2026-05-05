@@ -19,7 +19,7 @@ public abstract class KeybindsScreenMixin extends Screen {
         super(title);
     }
 
-    @Inject(method = "init", at = @At("TAIL"))
+    @Inject(method = "init()V", at = @At("TAIL"))
     private void onInit(CallbackInfo ci) {
         searchBox = new EditBox(
                 this.font,
