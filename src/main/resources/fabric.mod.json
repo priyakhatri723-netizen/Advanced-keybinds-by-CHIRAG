@@ -17,8 +17,8 @@
     "bindyourkeys.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.16.5",
+    "fabricloader": ">=0.16.10",
     "fabric-api": "*",
-    "minecraft": "~1.21.1"
+    "minecraft": "~1.21.11"
   }
 }
