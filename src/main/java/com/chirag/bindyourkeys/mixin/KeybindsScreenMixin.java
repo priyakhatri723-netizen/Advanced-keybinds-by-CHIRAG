@@ -1,50 +1,39 @@
 package com.chirag.bindyourkeys.mixin;
 
-import com.chirag.bindyourkeys.KeybindManager;
-import net.minecraft.client.gui.screen.option.KeybindsScreen;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.screens.controls.KeyBindsScreen;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import net.minecraft.client.gui.screen.Screen;
-import java.util.*;
 
-@Mixin(KeybindsScreen.class)
+@Mixin(KeyBindsScreen.class)
 public abstract class KeybindsScreenMixin extends Screen {
 
-    private TextFieldWidget searchBox;
+    private EditBox searchBox;
     private String searchQuery = "";
 
-    protected KeybindsScreenMixin(Text title) {
+    protected KeybindsScreenMixin(Component title) {
         super(title);
     }
 
     @Inject(method = "init", at = @At("TAIL"))
     private void onInit(CallbackInfo ci) {
-        searchBox = new TextFieldWidget(
-                this.textRenderer,
+        searchBox = new EditBox(
+                this.font,
                 this.width / 2 - 100, 10, 200, 20,
-                Text.literal("Search keybinds..."));
-        searchBox.setPlaceholder(Text.literal("Search keybinds..."));
-        searchBox.setChangedListener(text -> searchQuery = text.toLowerCase());
-        this.addDrawableChild(searchBox);
+                Component.literal("Search keybinds..."));
+        searchBox.setHint(Component.literal("Search keybinds..."));
+        searchBox.setResponder(text -> searchQuery = text.toLowerCase());
+        this.addRenderableWidget(searchBox);
     }
 
     @Inject(method = "render", at = @At("TAIL"))
-    private void onRender(net.minecraft.client.gui.DrawContext context,
+    private void onRender(net.minecraft.client.gui.GuiGraphics context,
             int mouseX, int mouseY, float delta, CallbackInfo ci) {
         if (searchBox != null) {
             searchBox.render(context, mouseX, mouseY, delta);
-        }
-    }
-
-    @Inject(method = "mouseClicked", at = @At("HEAD"))
-    private void onMouseClicked(double mouseX, double mouseY,
-            int button, CallbackInfo ci) {
-        if (searchBox != null) {
-            searchBox.mouseClicked(mouseX, mouseY, button);
         }
     }
 }
