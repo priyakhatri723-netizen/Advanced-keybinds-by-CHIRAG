@@ -7,6 +7,7 @@ import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import net.minecraft.client.gui.GuiGraphics;
 
 @Mixin(KeyBindsScreen.class)
 public abstract class KeybindsScreenMixin extends Screen {
@@ -30,7 +31,7 @@ public abstract class KeybindsScreenMixin extends Screen {
     }
 
     @Inject(method = "render", at = @At("TAIL"))
-    private void onRender(net.minecraft.client.gui.GuiGraphics context,
+    private void onRender(GuiGraphics context,
             int mouseX, int mouseY, float delta, CallbackInfo ci) {
         if (searchBox != null) {
             searchBox.render(context, mouseX, mouseY, delta);
