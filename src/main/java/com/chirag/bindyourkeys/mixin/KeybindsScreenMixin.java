@@ -19,7 +19,7 @@ public abstract class KeybindsScreenMixin extends Screen {
         super(title);
     }
 
-    @Inject(method = "init()V", at = @At("TAIL"))
+    @Inject(method = "init", at = @At("TAIL"), remap = false)
     private void onInit(CallbackInfo ci) {
         searchBox = new EditBox(
                 this.font,
@@ -30,7 +30,7 @@ public abstract class KeybindsScreenMixin extends Screen {
         this.addRenderableWidget(searchBox);
     }
 
-    @Inject(method = "render", at = @At("TAIL"))
+    @Inject(method = "render", at = @At("TAIL"), remap = false)
     private void onRender(GuiGraphics context,
             int mouseX, int mouseY, float delta, CallbackInfo ci) {
         if (searchBox != null) {
