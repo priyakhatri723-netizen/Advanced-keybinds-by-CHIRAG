@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(KeyBindsScreen.class)
+@Mixin(value = KeyBindsScreen.class, remap = false)
 public abstract class KeybindsScreenMixin extends Screen {
 
     private EditBox searchBox;
@@ -19,7 +19,7 @@ public abstract class KeybindsScreenMixin extends Screen {
         super(title);
     }
 
-    @Inject(method = "init", at = @At("TAIL"), remap = false)
+    @Inject(method = "subInit", at = @At("TAIL"))
     private void onInit(CallbackInfo ci) {
         searchBox = new EditBox(
                 this.font,
@@ -30,7 +30,7 @@ public abstract class KeybindsScreenMixin extends Screen {
         this.addRenderableWidget(searchBox);
     }
 
-    @Inject(method = "render", at = @At("TAIL"), remap = false)
+    @Inject(method = "render", at = @At("TAIL"))
     private void onRender(GuiGraphics context,
             int mouseX, int mouseY, float delta, CallbackInfo ci) {
         if (searchBox != null) {
