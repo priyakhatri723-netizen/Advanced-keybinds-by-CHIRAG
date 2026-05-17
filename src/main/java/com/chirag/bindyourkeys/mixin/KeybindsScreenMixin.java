@@ -10,9 +10,12 @@ import net.minecraft.client.KeyMapping;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import java.util.Arrays;
 
 @Mixin(value = KeyBindsScreen.class, remap = false)
 public abstract class KeybindsScreenMixin extends Screen {
+
+    @Shadow @Final private net.minecraft.client.Options options = null;
 
     private EditBox searchBox;
     private String searchQuery = "";
@@ -23,7 +26,7 @@ public abstract class KeybindsScreenMixin extends Screen {
 
     @Inject(method = "method_60329", at = @At("TAIL"))
     private void onInit(CallbackInfo ci) {
-        // Add search box at top
+        // Search box at top
         searchBox = new EditBox(
                 this.font,
                 this.width / 2 - 100, 22, 200, 18,
@@ -32,32 +35,30 @@ public abstract class KeybindsScreenMixin extends Screen {
         searchBox.setResponder(this::onSearchChanged);
         this.addRenderableWidget(searchBox);
 
-        // Move existing buttons up and split into two
-        // "Bind Toggle" button (left half)
+        // Bind Toggle button - positioned ABOVE the existing buttons
         this.addRenderableWidget(Button.builder(
                 Component.literal("Bind Toggle"),
-                btn -> {
-                    // Toggle mode placeholder
-                })
-                .bounds(this.width / 2 - 155, this.height - 29, 150, 20)
+                btn -> { })
+                .bounds(this.width / 2 - 155, this.height - 52, 150, 20)
                 .build());
 
-        // "Normal Bind" button (right half)  
+        // Normal Bind button
         this.addRenderableWidget(Button.builder(
                 Component.literal("Normal Bind"),
-                btn -> {
-                    // Normal bind mode placeholder
-                })
-                .bounds(this.width / 2 + 5, this.height - 29, 150, 20)
+                btn -> { })
+                .bounds(this.width / 2 + 5, this.height - 52, 150, 20)
                 .build());
     }
 
     private void onSearchChanged(String query) {
-        searchQuery = query.toLowerCase();
-        KeyBindsScreen screen = (KeyBindsScreen)(Object)this;
-        // Filter keybindings list
-        for (KeyMapping key : this.minecraft.options.keyMappings) {
-            String name = key.getName().toLowerCase();
+        searchQuery = query.toLowerCase().trim();
+        // Filter keybindings
+        if (this.minecraft != null && this.minecraft.options != null) {
+            KeyMapping[] keys = this.minecraft.options.keyMappings;
+            for (KeyMapping key : keys) {
+                boolean visible = searchQuery.isEmpty() ||
+                    key.getName().toLowerCase().contains(searchQuery);
+            }
         }
     }
 
