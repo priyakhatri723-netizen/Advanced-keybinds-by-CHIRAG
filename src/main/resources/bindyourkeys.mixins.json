@@ -4,7 +4,8 @@
   "package": "com.chirag.bindyourkeys.mixin",
   "compatibilityLevel": "JAVA_21",
   "client": [
-    "KeybindEntryMixin"
+    "KeybindEntryMixin",
+    "KeybindRowMixin"
   ],
   "injectors": {
     "defaultRequire": 1
