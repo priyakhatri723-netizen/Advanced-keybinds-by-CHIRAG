@@ -10,12 +10,9 @@ import net.minecraft.client.KeyMapping;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import java.util.Arrays;
 
 @Mixin(value = KeyBindsScreen.class, remap = false)
 public abstract class KeybindsScreenMixin extends Screen {
-
-    @Shadow @Final private net.minecraft.client.Options options = null;
 
     private EditBox searchBox;
     private String searchQuery = "";
@@ -26,23 +23,23 @@ public abstract class KeybindsScreenMixin extends Screen {
 
     @Inject(method = "method_60329", at = @At("TAIL"))
     private void onInit(CallbackInfo ci) {
-        // Search box at top
         searchBox = new EditBox(
                 this.font,
                 this.width / 2 - 100, 22, 200, 18,
                 Component.literal("Search keybinds..."));
         searchBox.setHint(Component.literal("Search keybinds..."));
-        searchBox.setResponder(this::onSearchChanged);
+        searchBox.setResponder(query -> {
+            searchQuery = query.toLowerCase().trim();
+            filterKeybinds();
+        });
         this.addRenderableWidget(searchBox);
 
-        // Bind Toggle button - positioned ABOVE the existing buttons
         this.addRenderableWidget(Button.builder(
                 Component.literal("Bind Toggle"),
                 btn -> { })
                 .bounds(this.width / 2 - 155, this.height - 52, 150, 20)
                 .build());
 
-        // Normal Bind button
         this.addRenderableWidget(Button.builder(
                 Component.literal("Normal Bind"),
                 btn -> { })
@@ -50,15 +47,12 @@ public abstract class KeybindsScreenMixin extends Screen {
                 .build());
     }
 
-    private void onSearchChanged(String query) {
-        searchQuery = query.toLowerCase().trim();
-        // Filter keybindings
-        if (this.minecraft != null && this.minecraft.options != null) {
-            KeyMapping[] keys = this.minecraft.options.keyMappings;
-            for (KeyMapping key : keys) {
-                boolean visible = searchQuery.isEmpty() ||
-                    key.getName().toLowerCase().contains(searchQuery);
-            }
+    private void filterKeybinds() {
+        if (this.minecraft == null) return;
+        KeyMapping[] keys = this.minecraft.options.keyMappings;
+        for (KeyMapping key : keys) {
+            boolean matches = searchQuery.isEmpty() ||
+                key.getName().toLowerCase().contains(searchQuery);
         }
     }
 
